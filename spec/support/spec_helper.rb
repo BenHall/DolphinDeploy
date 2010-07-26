@@ -6,3 +6,4 @@ $: << File.join(@root_dir, "spec/support")
 
 require 'rubygems'
 require 'spec'
+require 'digest'
