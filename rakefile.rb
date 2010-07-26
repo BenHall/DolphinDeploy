@@ -1,3 +1,6 @@
+$: << 'lib'
+require 'dolphindeploy'
+   
 namespace :specs do
   require 'spec/rake/spectask'
 
@@ -8,4 +11,15 @@ namespace :specs do
     t.spec_files = FileList['spec/**/*_spec.rb']
   end
   
+end
+
+
+
+namespace :example do
+ desc "Example"
+ task :run do
+   @deployment = Deployment.load()    
+   require 'pp'
+   pp @deployment
+ end
 end
