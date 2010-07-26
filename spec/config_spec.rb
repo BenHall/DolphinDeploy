@@ -59,3 +59,26 @@ end")
     @deployment.environment.systest.to.should == ['abc', 'xxx', 'xyz', '123']
   end  
 end
+
+describe "Configuration with top level properties and sub details" do
+  File.stubs(:exists?).returns(true)
+  
+  it "should return correct host for multiple named environments" do
+    File.stubs(:read).returns("environment do 
+    desc \"Deployment 123\"
+    setting :test
+  env :systest do
+    host \"www.test.systest\"
+  end
+
+  env :uat do
+    host \"www.test.uat\"
+  end
+end")
+    require 'config'
+    
+    @deployment = Deployment.load()    
+    @deployment.environment.desc.should == "Deployment 123"
+    @deployment.environment.setting.should == :test
+  end
+end
