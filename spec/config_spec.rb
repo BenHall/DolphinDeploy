@@ -13,8 +13,8 @@ end")
   end
 end
 
-describe "Configuration setting environments with multiple different env" do
-  it "should execute dsl after being required which modifies properties on the object" do
+describe "Configuration with multiple properties" do
+  it "should return correct host for multiple named environments" do
     File.stubs(:exists?).returns(true)
     File.stubs(:read).returns("environment do 
   env :systest do
