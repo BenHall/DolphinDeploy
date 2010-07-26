@@ -13,8 +13,6 @@ namespace :specs do
   
 end
 
-
-
 namespace :example do
  desc "Example"
  task :run do

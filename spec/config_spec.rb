@@ -12,3 +12,23 @@ end")
     @deployment.environment.tester.should be_true
   end
 end
+
+describe "Configuration setting environments with multiple different env" do
+  it "should execute dsl after being required which modifies properties on the object" do
+    File.stubs(:exists?).returns(true)
+    File.stubs(:read).returns("environment do 
+  env :systest do
+    host \"www.test.systest\"
+  end
+
+  env :uat do
+    host \"www.test.uat\"
+  end
+end")
+    require 'config'
+    
+    @deployment = Deployment.load()    
+    @deployment.environment.systest.host.should == "www.test.systest"
+    @deployment.environment.uat.host.should == "www.test.uat"
+  end
+end
