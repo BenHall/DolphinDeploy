@@ -7,7 +7,7 @@ describe "DeployCommandCreator"  do
     configured_as :mvc
   env :systest do
     host \"Test\"
-    to \"abc\", \"xxx\"
+    to \"server\", \"path\"
   end
 end")
     require 'deploymentconfig'
@@ -15,16 +15,26 @@ end")
     return Deployment.load()
   end
   
-  it "Should create deployment config object based on configuration" do 
+  before do
     creator = DeployCommandCreator.new()
-    mvc = creator.convert_from_config(config, :systest)
-    mvc.should_not be_nil
-    mvc.class.should == MvcDeployment
+    @mvc = creator.convert_from_config(config, :systest)
   end
   
-  it "Should set environment variable" do 
-    creator = DeployCommandCreator.new()
-    mvc = creator.convert_from_config(config, :systest)
-    mvc.environment.should == :systest
+  it "Should create deployment config object based on configuration" do 
+    @mvc.should_not be_nil
+    @mvc.class.should == MvcDeployment
+  end
+  
+  it "Should set environment variable" do
+    @mvc.environment.should == :systest
   end  
+  
+  it "Should set the host variable" do 
+    @mvc.host.should == "Test"
+  end  
+  
+  it "Should set the to variable" do 
+    @mvc.to.server.should == "server"
+    @mvc.to.path.should == "path"
+  end    
 end
