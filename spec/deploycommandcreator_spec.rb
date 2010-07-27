@@ -17,8 +17,14 @@ end")
   
   it "Should create deployment config object based on configuration" do 
     creator = DeployCommandCreator.new()
-    mvc = creator.convert_from_config(config)
+    mvc = creator.convert_from_config(config, :systest)
     mvc.should_not be_nil
     mvc.class.should == MvcDeployment
   end
+  
+  it "Should set environment variable" do 
+    creator = DeployCommandCreator.new()
+    mvc = creator.convert_from_config(config, :systest)
+    mvc.environment.should == :systest
+  end  
 end

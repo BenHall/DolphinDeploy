@@ -1,8 +1,11 @@
 require 'mvc_deployment'
 
 class DeployCommandCreator
-  def convert_from_config(config)
+  def convert_from_config(config, env)
     cls_name = config.environment.configured_as
-    Kernel.const_get(cls_name.to_s.capitalize + "Deployment").new
+    mvc = Kernel.const_get(cls_name.to_s.capitalize + "Deployment").new
+    mvc.environment = env
+    
+    return mvc
   end
 end
