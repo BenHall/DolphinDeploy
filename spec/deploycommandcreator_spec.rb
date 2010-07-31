@@ -45,5 +45,29 @@ end")
     
     @mvc.to[1].server.should == "server2"
     @mvc.to[1].path.should == "path2"
-  end    
+  end      
+end
+
+describe "DeployCommandCreator", "overriding default" do
+  def config()
+    File.stubs(:read).returns("environment do 
+    configured_as :mvc
+    desc \"Testing\"
+  env :systest do
+    host \"Test\"
+  end
+end")
+    require 'deploymentconfig'
+    
+    return Deployment.load()
+  end
+  
+  before do
+    creator = DeployCommandCreator.new()
+    @mvc = creator.convert_from_config(config, :systest)
+  end
+  
+  it "should have a description of Testing" do 
+    @mvc.description.should == "Testing"
+  end
 end

@@ -3,14 +3,20 @@ class MvcDeployment
   attr_accessor :host  
   attr_accessor :to
   attr_accessor :port
+  attr_accessor :description
   
-  def initalize()
+  def initialize()
     set_defaults
   end
 
   def set_defaults()
     self.port = 80
+    self.description = "MvcDeployment"
   end
+  
+  def set_description(desc)
+    self.description = desc
+  end    
 
   def set_host(header)
     self.host = header
