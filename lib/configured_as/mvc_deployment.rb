@@ -8,10 +8,22 @@ class MvcDeployment
     # The method then goes self.to.server etc...
     env = config.environment[environment_being_deployed]
     self.environment = environment_being_deployed
-    self.host = env.host
-    self.to = DeployTo.new
-    self.to.server = env.to[0]
-    self.to.path = env.to[1]
+    self.host = env.host 
+    set_to env.to 
+  end
+  
+  def set_to(locations)
+    self.to = []
+  
+    i = 0
+    while i < locations.length
+      location = DeployTo.new
+      location.server = locations[i]
+      location.path = locations[i + 1]
+
+      self.to << location
+      i = i + 2
+    end      
   end
 end
 
