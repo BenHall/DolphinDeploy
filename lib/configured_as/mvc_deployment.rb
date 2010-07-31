@@ -2,14 +2,26 @@ class MvcDeployment
   attr_accessor :environment
   attr_accessor :host  
   attr_accessor :to
+  attr_accessor :port
   
-  def populate(config, environment_being_deployed)
-    # Should be dynamic. Iterate over all the keys and call the method - for example to([]) - passing in the value set. 
-    # The method then goes self.to.server etc...
-    env = config.environment[environment_being_deployed]
-    self.environment = environment_being_deployed
-    self.host = env.host 
-    set_to env.to 
+  def initalize()
+    set_defaults
+  end
+
+  def set_defaults()
+    self.port = 80
+  end
+
+  def set_host(header)
+    self.host = header
+  end
+
+  def set_port(num)
+    self.port = num
+  end
+
+  def set_environment(env)
+    self.environment = env
   end
   
   def set_to(locations)
