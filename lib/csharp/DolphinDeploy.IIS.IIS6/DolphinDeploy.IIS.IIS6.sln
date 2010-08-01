@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DolphinDeploy.IIS.IIS6", "DolphinDeploy.IIS.IIS6\DolphinDeploy.IIS.IIS6.csproj", "{42DA9D8E-0106-4875-896B-3B45C9EC0C01}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DolphinDeploy.IIS.IIS6.Tests", "DolphinDeploy.IIS.IIS6.Tests\DolphinDeploy.IIS.IIS6.Tests.csproj", "{FBC105C7-FFE5-4991-842C-1811B2BD24ED}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{42DA9D8E-0106-4875-896B-3B45C9EC0C01}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{42DA9D8E-0106-4875-896B-3B45C9EC0C01}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{42DA9D8E-0106-4875-896B-3B45C9EC0C01}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{42DA9D8E-0106-4875-896B-3B45C9EC0C01}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FBC105C7-FFE5-4991-842C-1811B2BD24ED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FBC105C7-FFE5-4991-842C-1811B2BD24ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FBC105C7-FFE5-4991-842C-1811B2BD24ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FBC105C7-FFE5-4991-842C-1811B2BD24ED}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
