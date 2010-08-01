@@ -22,5 +22,8 @@ namespace :example do
     require 'pp'
     pp deployment
     pp mvc
+    
+    mvc.deploy :systest
+    
   end
 end

@@ -17,9 +17,19 @@ describe MvcDeployment, "defaults"  do
 end
 
 describe MvcDeployment, "deployment"  do
+  before do
+    @mvc = MvcDeployment.new
+  end
+  
   it "should call out to IIS6"  do
     pending "Not sure how to test this"
     @mvc.deploy()
+  end
+  
+  it "should get the location based on the environment" do
+    @mvc.set_to ['server', 'C:/some_location']
+    path = @mvc.get_location('server')
+    path.should == 'C:/some_location'
   end
 end
 

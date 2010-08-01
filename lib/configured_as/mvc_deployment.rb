@@ -49,6 +49,11 @@ class MvcDeployment
     end      
   end
   
+  def get_location(server)
+    servers = self.to.select{|t| t.server == server}
+    servers[0].path
+  end
+  
   def upload(server)
     
   end

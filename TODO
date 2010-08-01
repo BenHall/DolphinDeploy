@@ -4,3 +4,12 @@
 - Auto-detect between IIS6 and IIS7
 - Support executing both on the box and remotely.  Plink? What do I upload\execute?? 
 - Need to decide how to upload the files... should already be pre-zipped from Albacore
+
+- Support 
+    Before do 
+      exec ''
+    end
+    
+    After do 
+      exec ''
+    end
