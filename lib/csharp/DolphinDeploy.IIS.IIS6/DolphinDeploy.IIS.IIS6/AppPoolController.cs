@@ -18,16 +18,6 @@ namespace DolphinDeploy.IIS.IIS6
 
         private void SetProperties(DirectoryEntry appPool)
         {
-            try
-            {
-                appPool.InvokeSet("AppPoolId", new Object[] { Name });
-                appPool.InvokeSet("AppPoolIdentityType", new Object[] { 0 });
-
-            }
-            catch (Exception)
-            {
-                //problems when executing against IIS7
-            }
             appPool.Properties["AppPoolQueueLength"].Value = 4000;
             appPool.Invoke("SetInfo", null);
         }
