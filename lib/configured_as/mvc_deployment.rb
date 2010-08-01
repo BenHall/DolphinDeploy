@@ -48,10 +48,9 @@ class MvcDeployment
     
   end
   
-  def deploy(server)
-    #  swap_configs
-    #  iis = IIS.new
-    #  iis.create()
+  def deploy(server, environment)  
+    #iis = IIS.new
+    #iis.create()
     #  Execute post deployment steps
     #     Configure ISAPI etc
   end
