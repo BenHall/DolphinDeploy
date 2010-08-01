@@ -9,6 +9,7 @@ namespace DolphinDeploy.IIS.IIS6
         {
             DirectoryEntry appPools = GetAppPoolAdmin();
             DirectoryEntry appPool = appPools.Children.Add(Name, "IISApplicationPool");
+            appPool.CommitChanges();
 
             SetProperties(appPool);
             appPool.CommitChanges();
@@ -17,9 +18,16 @@ namespace DolphinDeploy.IIS.IIS6
 
         private void SetProperties(DirectoryEntry appPool)
         {
-            appPool.InvokeSet("AppPoolId", new Object[] { Name });
-            appPool.InvokeSet("AppPoolIdentityType", new Object[] { 0 });
+            try
+            {
+                appPool.InvokeSet("AppPoolId", new Object[] { Name });
+                appPool.InvokeSet("AppPoolIdentityType", new Object[] { 0 });
 
+            }
+            catch (Exception)
+            {
+                //problems when executing against IIS7
+            }
             appPool.Properties["AppPoolQueueLength"].Value = 4000;
             appPool.Invoke("SetInfo", null);
         }
