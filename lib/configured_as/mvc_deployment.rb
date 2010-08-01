@@ -4,6 +4,7 @@ class MvcDeployment
   attr_accessor :to
   attr_accessor :port
   attr_accessor :description
+  attr_accessor :site_name
   
   def initialize()
     set_defaults
@@ -13,6 +14,10 @@ class MvcDeployment
     self.port = 80
     self.description = "MvcDeployment"
   end
+  
+  def set_name(name)
+    self.site_name = name
+  end    
   
   def set_description(desc)
     self.description = desc

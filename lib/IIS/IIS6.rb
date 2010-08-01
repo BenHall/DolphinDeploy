@@ -1,20 +1,20 @@
+$: << 'external'
+load_assembly 'DolphinDeploy.IIS.IIS6'
+include DolphinDeploy::IIS::IIS6
+    
 class IIS6
-  def initialize()
-    $: << 'external'
-    load_assembly 'DolphinDeploy.IIS.IIS6'
-    include DolphinDeploy::IIS::IIS6
+  def initialize()    
   end
   
-  
   def deploy(server, location, deployment)
-    create_app_pool(server, deployment.name) #Server is only so we can pull out correct path to deploy too
+    create_app_pool(server, deployment.site_name) #Server is only so we can pull out correct path to deploy too
     create_website(server, location, deployment)
   end
   
   def exists?(server, deployment)
     website = WebsiteController.new
     website.server = server
-    website.name = deployment.name
+    website.name = deployment.site_name
     
     return website.exists
   end
@@ -30,8 +30,8 @@ class IIS6
   
   def create_website(server, location, deployment)
     website = WebsiteController.new
-    website.name = deployment.name
-    website.app_pool = get_app_pool_name(deployment.name)
+    website.name = deployment.site_name
+    website.app_pool = get_app_pool_name(deployment.site_name)
     website.home_directory = location
     website.port = deployment.port
     website.server = server
