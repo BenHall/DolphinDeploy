@@ -17,7 +17,10 @@ describe MvcDeployment, "defaults"  do
 end
 
 describe MvcDeployment, "deployment"  do
-  it "should call out to IIS6"  
+  it "should call out to IIS6"  do
+    pending "Not sure how to test this"
+    @mvc.deploy()
+  end
 end
 
 

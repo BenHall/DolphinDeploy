@@ -48,14 +48,16 @@ class MvcDeployment
     
   end
   
-  def deploy(server, environment)  
-    #iis = IIS.new
-    #iis.create()
+  def deploy(server)  
+    swap_configs()
+    iis = IIS.new
+    iis.create(server, location, self)
     #  Execute post deployment steps
     #     Configure ISAPI etc
   end
   
-  def swap_configs(env)
+  def swap_configs()
+    env = self.environment
     FileUtils.cp 'web.config', 'web.original.config'
     FileUtils.mv "web.#{env.to_s}.config", 'web.config'
   end
