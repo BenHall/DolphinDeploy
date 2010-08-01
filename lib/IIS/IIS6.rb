@@ -6,7 +6,7 @@ class IIS6
   end
   
   
-  def create(server, location, deployment)
+  def deploy(server, location, deployment)
     create_app_pool(server, deployment.name) #Server is only so we can pull out correct path to deploy too
     create_website(server, location, deployment)
   end
