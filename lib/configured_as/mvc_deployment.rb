@@ -43,6 +43,23 @@ class MvcDeployment
       i = i + 2
     end      
   end
+  
+  def upload(server)
+    
+  end
+  
+  def deploy(server)
+    #  swap_configs
+    #  iis = IIS.new
+    #  iis.create()
+    #  Execute post deployment steps
+    #     Configure ISAPI etc
+  end
+  
+  def swap_configs(env)
+    FileUtils.cp 'web.config', 'web.original.config'
+    FileUtils.mv "web.#{env.to_s}.config", 'web.config'
+  end
 end
 
 class DeployTo

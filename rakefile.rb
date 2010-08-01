@@ -14,10 +14,13 @@ namespace :specs do
 end
 
 namespace :example do
- desc "Example"
- task :run do
-   @deployment = Deployment.load()    
-   require 'pp'
-   pp @deployment
- end
+  desc "Example"
+  task :run do
+    deployment = Deployment.load()    
+    creator = DeployCommandCreator.new()
+    mvc = creator.convert_from_config(config, :systest)
+    require 'pp'
+    pp deployment
+    pp mvc
+  end
 end
