@@ -12,7 +12,9 @@ namespace DolphinDeploy.IIS.IIS6
             {
                 int websiteId = CreateWebsite(GetIISSiteEntryName());
 
-                SetProperties();
+                var website = GetWebsite();
+                
+                SetProperties(website);
 
                 return websiteId;
             }
@@ -43,9 +45,8 @@ namespace DolphinDeploy.IIS.IIS6
             }
         }
 
-        private void SetProperties()
+        private void SetProperties(DirectoryEntry website)
         {
-            DirectoryEntry website = GetWebsite();
             SetSecurity(website);
             SetFriendlyName(website);
             SetASPnetVersion(website);
@@ -54,7 +55,9 @@ namespace DolphinDeploy.IIS.IIS6
         private int CreateWebsite(object[] newsite)
         {
             DirectoryEntry admin = GetIISAdmin();
-            return (int)admin.Invoke("CreateNewSite", newsite);
+            int websiteId = (int)admin.Invoke("CreateNewSite", newsite);
+            admin.CommitChanges();
+            return websiteId;
         }
 
         private void SetSecurity(DirectoryEntry website)
