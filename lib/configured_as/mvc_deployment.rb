@@ -5,6 +5,7 @@ class MvcDeployment
   attr_accessor :port
   attr_accessor :description
   attr_accessor :site_name
+  attr_accessor :deploy_zip_path
   
   def initialize()
     set_defaults
@@ -18,6 +19,10 @@ class MvcDeployment
   def set_name(name)
     self.site_name = name
   end    
+  
+  def set_deploy(path)
+    self.deploy_zip_path = path    
+  end
   
   def set_description(desc)
     self.description = desc
@@ -59,14 +64,35 @@ class MvcDeployment
   end
   
   def deploy(server)  
-    swap_configs()
+    location = get_location(server)
+    latest_version_location = get_latest_version(location)
+    
+    UnZip.unzip(self.deploy_zip_path, latest_version_location)
+    
+    swap_configs(latest_version_location)
     iis = IIS.new
-    iis.create(server, location, self)
+    iis.create(server, latest_version_location, self)
     #  Execute post deployment steps
     #     Configure ISAPI etc
   end
   
-  def swap_configs()
+  def get_latest_version(location)
+    dirs = Dir.glob("#{location}/**").grep(/^#{self.site_name}/)
+    
+    release_numbers = [0]
+    
+    dir.each do |dir|
+      s = /#{self.site_name}-(.*)/.match(dir)
+      release_numbers << s[1] unless s.nil?
+    end
+    
+    new_version = release_numbers.max + 1
+    
+    File.join(location, self.site_site + new_version)
+    
+  end
+  
+  def swap_configs(location)
     env = self.environment
     FileUtils.cp 'web.config', 'web.original.config'
     FileUtils.mv "web.#{env.to_s}.config", 'web.config'
