@@ -1,7 +1,4 @@
-- Merge the C# activities from MeerPush prototype
 - Introduce extension points
-- Have a configuration model similar to Albacore 
-- Need to decide how to upload the files... should already be pre-zipped from Albacore
 
 - Support 
     Before do 
@@ -14,7 +11,5 @@
     
     
     
-- Extract zip file
 - Swap configurations
-- Call Deploy on directory.
    - If IIS site exists, delete it
