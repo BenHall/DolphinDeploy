@@ -85,14 +85,14 @@ class MvcDeployment
     
     new_version = find_next_release_version(dirs)
     
-    File.join(location, self.site_name + "%02d" % new_version)
+    File.join(location, self.site_name + "-" + "%02d" % new_version)
   end
   
   def find_next_release_version(dirs)
     release_numbers = [0]
     
     dirs.each do |dir|
-      s = /#{self.site_name}(\d+)/.match(dir)
+      s = /#{self.site_name}-(\d+)/.match(dir)
       release_numbers << s[1].to_i unless s.nil?
     end
     
