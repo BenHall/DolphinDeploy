@@ -69,26 +69,26 @@ class MvcDeployment
     
     UnZip.unzip(self.deploy_zip_path, latest_version_location)
     
-    swap_configs(latest_version_location)
+    #swap_configs(latest_version_location)
     iis = IIS.new
-    iis.create(server, latest_version_location, self)
+    iis.deploy(server, latest_version_location, self)
     #  Execute post deployment steps
     #     Configure ISAPI etc
   end
   
   def get_latest_version(location)
-    dirs = Dir.glob("#{location}/**").grep(/^#{self.site_name}/)
+    dirs = Dir.glob("#{location}/**").grep(/#{self.site_name}/)
     
     release_numbers = [0]
     
-    dir.each do |dir|
-      s = /#{self.site_name}-(.*)/.match(dir)
-      release_numbers << s[1] unless s.nil?
+    dirs.each do |dir|
+      s = /#{self.site_name}(\d+)/.match(dir)
+      release_numbers << s[1].to_i unless s.nil?
     end
     
     new_version = release_numbers.max + 1
     
-    File.join(location, self.site_site + new_version)
+    File.join(location, self.site_name + "%02d" % new_version)
     
   end
   

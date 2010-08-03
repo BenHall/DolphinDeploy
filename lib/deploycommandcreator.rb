@@ -12,6 +12,7 @@ class DeployCommandCreator
   private 
   def create_object(config)
     cls_name = config.environment.configured_as
+    # raise if cls_name.nil?
     Kernel.const_get(cls_name.to_s.capitalize + "Deployment").new    
   end
   

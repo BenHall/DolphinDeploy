@@ -32,7 +32,7 @@ class IIS6
     website = WebsiteController.new
     website.name = deployment.site_name
     website.app_pool = get_app_pool_name(deployment.site_name)
-    website.home_directory = location
+    website.home_directory = location.gsub('/','\\'); 
     website.port = deployment.port
     website.server = server
         
