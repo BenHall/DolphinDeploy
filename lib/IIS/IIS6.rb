@@ -53,7 +53,7 @@ class IIS6
     
     path = "IIS://localhost/w3svc/#{site.name}/ROOT"
     root_site = DirectoryEntry.new(path.to_clr_string)
-    root_site.Properties['Path'][0] = location.to_clr_string
+    root_site.Properties['Path'][0] = location.gsub('/','\\').to_clr_string
     root_site.commit_changes()
   end
   
