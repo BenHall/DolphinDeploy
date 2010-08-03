@@ -18,8 +18,8 @@ namespace :example do
   task :run do
     deployment = Deployment.load()    
     creator = DeployCommandCreator.new()
-    mvc = creator.convert_from_config(deployment, :systest)
+    mvc = creator.convert_from_config(deployment, :local)
   
-    mvc.deploy 'localhost'
+    mvc.deploy 'localhost'    
   end
 end
