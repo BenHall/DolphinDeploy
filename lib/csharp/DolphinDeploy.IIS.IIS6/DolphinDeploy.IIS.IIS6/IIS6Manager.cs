@@ -7,7 +7,6 @@ namespace DolphinDeploy.IIS.IIS6
     {
         public string Server { get; set; }
         public string Name { get; set; }
-        public int Port { get; set; }
         public string HomeDirectory { get; set; }
 
         public DirectoryEntry GetWebsite()

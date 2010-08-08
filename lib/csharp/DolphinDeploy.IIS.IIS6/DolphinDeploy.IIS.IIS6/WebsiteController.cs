@@ -6,6 +6,9 @@ namespace DolphinDeploy.IIS.IIS6
     public class WebsiteController : IIS6Manager
     {
         public string AppPool { get; set; }
+        public string HostHeader { get; set; }
+        public int Port { get; set; }
+
         public int Create()
         {
             try
@@ -88,7 +91,7 @@ namespace DolphinDeploy.IIS.IIS6
 
         private object[] GetIISSiteEntryName()
         {
-            return new object[] { Name, new object[] { string.Format(":{0}:", Port) }, HomeDirectory };
+            return new object[] { Name, new object[] { string.Format("*:{0}:{1}", Port, HostHeader) }, HomeDirectory };
         }
     }
 }

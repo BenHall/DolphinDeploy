@@ -11,5 +11,8 @@
     
     
     
-- Swap configurations
-   - If IIS site exists, delete it
+- Setup ISAPI filters on IIS6
+- Turn off ScriptMap on IIS6 for static folder
+- Ability to create virtual directories
+- Logging
+- Rake task to include in project
