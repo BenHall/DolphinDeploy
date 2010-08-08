@@ -62,6 +62,7 @@ end
 
 describe "Configuration with top level properties and sub details" do
   File.stubs(:exists?).returns(true)
+  
   it "should return correct host for multiple named environments" do
     File.stubs(:read).returns("environment do 
     desc \"Deployment 123\"
@@ -79,5 +80,27 @@ end")
     @deployment = Deployment.load()    
     @deployment.environment.desc.should == "Deployment 123"
     @deployment.environment.setting.should == :test
+  end
+end
+
+
+describe "Before and After blocks" do
+  File.stubs(:exists?).returns(true)
+  
+  it "should return set of keys defined in the before block" do
+    File.stubs(:read).returns("environment do 
+    desc \"Deployment 123\"
+    setting :test
+    env :systest do
+      host \"www.test.systest\"
+      before do
+        value \"xyz\"
+      end
+    end
+end")
+    require 'deploymentconfig'
+    
+    @deployment = Deployment.load()    
+    @deployment.environment[:systest].before[:value].should == 'xyz'
   end
 end
