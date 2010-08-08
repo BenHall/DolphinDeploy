@@ -34,21 +34,3 @@ describe MvcDeployment, "deployment"  do
 end
 
 
-describe MvcDeployment, "swapping configuration" do
-  before do
-    @mvc = MvcDeployment.new
-    @mvc.environment = :systest
-  end
-  
-  it "should make a web.original.config before replacing file" do   
-    FileUtils.stubs(:mv).with('web.systest.config', 'web.config')
-    FileUtils.expects(:cp).with('web.config', 'web.original.config').once
-    @mvc.swap_configs()
-  end
-  
-  it "should swap config for environment to web.config" do  
-    FileUtils.stubs(:cp).with('web.config', 'web.original.config')
-    FileUtils.expects(:mv).with('web.systest.config', 'web.config').once
-    @mvc.swap_configs()
-  end
-end
