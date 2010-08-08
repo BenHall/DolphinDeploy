@@ -2,6 +2,7 @@ require File.join(File.dirname(__FILE__), '../', 'support', 'spec_helper')
 $: << 'lib/configured_as'
 require 'mvc_deployment'
 
+
 describe MvcDeployment, "defaults"  do
   before do
     @mvc = MvcDeployment.new
@@ -33,4 +34,51 @@ describe MvcDeployment, "deployment"  do
   end
 end
 
+describe MvcDeployment, "when executing" do
+  before(:each) do
+    FileManager.any_instance.expects(:get_latest_version).returns('')
+    FileManager.any_instance.expects(:extract).returns('')
+    IIS.any_instance.expects(:deploy).returns('')
+    
+    @mvc = MvcDeployment.new
+    @mvc.set_to ['server', 'test']
+    @mvc.set_before({:set_host => 'ABC'})
+    @mvc.set_after({:set_port => 99})
+  end
+  
+  it "should call all the methods specified in the before block" do        
+    @mvc.deploy('server')
+    @mvc.host.should == 'ABC'      
+  end
+  
+  it "should call all the methods specified in the before block" do    
+    @mvc.deploy('server')
+    @mvc.port.should == 99      
+  end
+end
 
+describe MvcDeployment, "Executing custom extensions"  do    
+  before(:each) do    
+    FileManager.any_instance.expects(:get_latest_version).returns('')
+    FileManager.any_instance.expects(:extract).returns('')
+    IIS.any_instance.expects(:deploy).returns('')
+    
+    MvcDeployment.module_eval do
+      attr_accessor :custom_prop
+      
+      def custom(val)
+        self.custom_prop = val
+      end
+    end
+    
+    @mvc = MvcDeployment.new
+    @mvc.set_to ['server', 'test']
+    @mvc.set_before({:custom => 'Random Value'})
+  end
+  
+  it "should call custom methods"  do
+    @mvc.deploy('server')
+    @mvc.custom_prop.should == 'Random Value'
+  end
+  
+end

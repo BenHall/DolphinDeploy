@@ -127,26 +127,6 @@ end")
   it "should support multiple calls being specified" do
     @mvc.before.keys.length.should == 2
   end
-  
-  describe "when executing" do
-    before(:each) do
-      FileManager.any_instance.expects(:get_latest_version).returns('')
-      FileManager.any_instance.expects(:extract).returns('')
-      IIS.any_instance.expects(:deploy).returns('')
-    end
-    
-    it "should call all the methods specified in the before block" do      
-      @mvc.host.should == 'Test'
-      @mvc.deploy('server')
-      @mvc.host.should == 'ABC'      
-    end
-    
-    it "should call all the methods specified in the before block" do
-      @mvc.port.should == 80
-      @mvc.deploy('server')
-      @mvc.port.should == 99      
-    end
-  end
 end
 
 
