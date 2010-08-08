@@ -6,6 +6,8 @@ class MvcDeployment
   attr_accessor :description
   attr_accessor :site_name
   attr_accessor :deploy_zip_path
+  attr_accessor :before
+  attr_accessor :after
   
   def initialize()
     set_defaults
@@ -54,12 +56,22 @@ class MvcDeployment
     end      
   end
   
+  def set_before(block)
+    self.before = block
+  end
+  
+  def set_after(block)
+    self.after = block
+  end
+  
   def get_location(server)
     servers = self.to.select{|t| t.server == server}
     servers[0].path
   end
     
   def deploy(server)  
+    execute_before_methods()
+        
     location = get_location(server)
     
     fm = FileManager.new
@@ -71,8 +83,26 @@ class MvcDeployment
     iis.deploy(server, latest_version_location, self)
     #  Execute post deployment steps
     #     Configure ISAPI etc
-  end
     
+    execute_after_methods()    
+  end
+   
+  def execute_before_methods
+    self.before.each do |k, v|
+      call_method(k, v)
+    end
+  end
+  
+  def execute_after_methods
+    self.after.each do |k, v|
+      call_method(k, v)
+    end
+  end
+  
+  def call_method(method_name, param)
+    self.send(method_name, param) if self.respond_to?(method_name)
+  end
+  
 end
 
 class DeployTo
