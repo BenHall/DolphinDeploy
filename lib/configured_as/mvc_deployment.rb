@@ -88,14 +88,18 @@ class MvcDeployment
   end
    
   def execute_before_methods
-    self.before.each do |k, v|
-      call_method(k, v)
+    unless self.before.nil?
+      self.before.each do |k, v|
+        call_method(k, v)
+      end
     end
   end
   
   def execute_after_methods
-    self.after.each do |k, v|
-      call_method(k, v)
+    unless self.after.nil?
+      self.after.each do |k, v|
+        call_method(k, v)
+      end
     end
   end
   
