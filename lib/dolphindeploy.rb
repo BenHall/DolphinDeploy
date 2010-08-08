@@ -2,7 +2,7 @@ raise Exception, "Dolphin Deploy is only supported on IronRuby" unless Object.co
 
 $: << 'lib\configured_as'
 $: << 'lib\IIS'
-require 'rubygems'
+require 'rubygems'  #FIX: Apprantly this is bad practice
 require 'digest'
 require 'deploymentconfig'
 require 'deploycommandcreator'
