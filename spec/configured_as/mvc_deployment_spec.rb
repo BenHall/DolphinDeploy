@@ -91,7 +91,7 @@ describe MvcDeployment, "Executing custom additional host headers"   do
   
   it "should call add_header on IIS instance" do
     mvc = MvcDeployment.new  
-    IIS.any_instance.expects(:set_extra_header).with("abc.header", mvc).returns(nil).once
+    IIS.any_instance.expects(:set_extra_header).returns(nil).once
 
     mvc.set_to ['server', 'test']
     mvc.set_after({:extra_header => 'abc.header'})

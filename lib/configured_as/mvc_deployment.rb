@@ -64,7 +64,7 @@ class MvcDeployment
     self.after = block
   end
   
-  def extra_header(header)
+  def extra_header(header) #Header will contain array of all the headers being added
     iis = IIS.new
     iis.set_extra_header(header, self)
   end

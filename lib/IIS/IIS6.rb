@@ -34,11 +34,45 @@ class IIS6
   end
   
   def set_extra_header(header, deployment)
-    cmd = "cscript external\\adsutil.vbs set w3svc/5/ServerBindings \":#{deployment.port}:#{header}\""
-    `#{cmd}`
+    site = get_website('localhost', deployment)
+    
+    header.each do |h|
+      existing_headers = get_existing_headers(site)
+      header_arg = ""
+      
+      existing_headers.each {|e| header_arg << "\"#{e}\" "}
+      
+      cmd = "cscript /nologo external\\adsutil.vbs set w3svc/#{site.name}/ServerBindings \":#{deployment.port}:#{h}\" #{header_arg}"
+      puts "About to execute: " + cmd
+      `#{cmd}`
+    end
   end
   
   private
+  
+  def get_existing_headers(site)
+#ServerBindings                  : (LIST)  (3 Items)
+#  ":80:local.testlocal2.test"
+#  ":80:test"
+#  ":80:test2"
+    cmd = "cscript /nologo external\\adsutil.vbs get w3svc/#{site.name}/ServerBindings"
+    result = `#{cmd}`
+    headers = result.to_a[1..-1].join
+    
+    headers = clean_output(headers)
+    
+    return headers
+  end
+  
+  def clean_output(output)
+    result = []
+    
+    output.each do |o|
+      result << o.strip.gsub("\n", "")
+    end
+    
+    return result
+  end
   
   def create_app_pool(server, name)
     app_pool = AppPoolController.new
@@ -48,15 +82,19 @@ class IIS6
   end
   
   def update_website_path(server, location, deployment)  
-    website = WebsiteController.new
-    website.name = deployment.site_name
-    website.server = server
-    site = website.get_website()
+    site = get_website(server, deployment)    
     
     path = "IIS://localhost/w3svc/#{site.name}/ROOT"
     root_site = DirectoryEntry.new(path.to_clr_string)
     root_site.Properties['Path'][0] = location.gsub('/','\\').to_clr_string
     root_site.commit_changes()
+  end
+  
+  def get_website(server, deployment)
+    website = WebsiteController.new
+    website.name = deployment.site_name
+    website.server = server
+    website.get_website()
   end
   
   def create_website(server, location, deployment)
