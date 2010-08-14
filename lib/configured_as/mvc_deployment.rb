@@ -66,7 +66,7 @@ class MvcDeployment
   
   def extra_header(header)
     iis = IIS.new
-    iis.set_extra_header(header)
+    iis.set_extra_header(header, self)
   end
   
   def get_location(server)

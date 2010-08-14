@@ -4,10 +4,7 @@ load_assembly 'System.DirectoryServices'
 include DolphinDeploy::IIS::IIS6
 include System::DirectoryServices
     
-class IIS6
-  def initialize()    
-  end
-  
+class IIS6  
   def deploy(server, location, deployment)
     unless apppool_exists?(server, deployment)
       create_app_pool(server, deployment.site_name) #Server is only so we can pull out correct path to deploy too
@@ -34,6 +31,11 @@ class IIS6
     app_pool.name = get_app_pool_name(deployment.site_name)
     
     return app_pool.exists
+  end
+  
+  def set_extra_header(header, deployment)
+    cmd = "cscript external\\adsutil.vbs set w3svc/5/ServerBindings \":#{deployment.port}:#{header}\""
+    `#{cmd}`
   end
   
   private
