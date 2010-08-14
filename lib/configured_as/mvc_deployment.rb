@@ -55,13 +55,18 @@ class MvcDeployment
       i = i + 2
     end      
   end
-  
+    
   def set_before(block)
     self.before = block
   end
   
   def set_after(block)
     self.after = block
+  end
+  
+  def extra_header(header)
+    iis = IIS.new
+    iis.set_extra_header(header)
   end
   
   def get_location(server)
@@ -95,7 +100,7 @@ class MvcDeployment
     end
   end
   
-  def execute_after_methods
+  def execute_after_methods  
     unless self.after.nil?
       self.after.each do |k, v|
         call_method(k, v)

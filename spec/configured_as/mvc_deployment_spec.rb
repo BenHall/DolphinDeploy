@@ -80,5 +80,22 @@ describe MvcDeployment, "Executing custom extensions"  do
     @mvc.deploy('server')
     @mvc.custom_prop.should == 'Random Value'
   end
+end
+
+describe MvcDeployment, "Executing custom additional host headers"   do
+  before(:each) do    
+    FileManager.any_instance.expects(:get_latest_version).returns('')
+    FileManager.any_instance.expects(:extract).returns('')
+    IIS.any_instance.expects(:deploy).returns('')    
+  end
   
+  it "should call add_header on IIS instance" do
+    IIS.any_instance.expects(:set_extra_header).with("abc.header").returns(nil).once
+    
+    @mvc = MvcDeployment.new
+    @mvc.set_to ['server', 'test']
+    @mvc.set_after({:extra_header => 'abc.header'})
+    
+    @mvc.deploy('server')
+  end
 end

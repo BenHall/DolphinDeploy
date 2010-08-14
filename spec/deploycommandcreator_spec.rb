@@ -128,6 +128,3 @@ end")
     @mvc.before.keys.length.should == 2
   end
 end
-
-
-
