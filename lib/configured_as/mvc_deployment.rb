@@ -70,6 +70,16 @@ class MvcDeployment
     self.after = block
   end
   
+  def add_machine_name_host_header(server, header)
+    hostname = `hostname`
+    updated_header = header.gsub("<machinename>", hostname.gsub("\n", ""))
+    
+    puts "Adding" + updated_header
+    
+    iis = IIS.server
+    iis.set_extra_header(server, updated_header, self)    
+  end
+  
   def extra_header(server, header) #Header will contain array of all the headers being added
     iis = IIS.server
     iis.set_extra_header(server, header, self)
