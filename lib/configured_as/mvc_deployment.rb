@@ -3,6 +3,7 @@ class MvcDeployment
   attr_accessor :host  
   attr_accessor :to
   attr_accessor :port
+  attr_accessor :ipaddress
   attr_accessor :description
   attr_accessor :site_name
   attr_accessor :deploy_zip_path
@@ -32,6 +33,10 @@ class MvcDeployment
 
   def set_host(header)
     self.host = header
+  end
+  
+  def set_ipaddress(address)
+    self.ipaddress = address
   end
 
   def set_port(num)

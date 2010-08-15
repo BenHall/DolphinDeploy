@@ -7,6 +7,7 @@ namespace DolphinDeploy.IIS.IIS6
     {
         public string AppPool { get; set; }
         public string HostHeader { get; set; }
+        public string IpAddress { get; set; }
         public int Port { get; set; }
 
         public int Create()
@@ -91,7 +92,10 @@ namespace DolphinDeploy.IIS.IIS6
 
         private object[] GetIISSiteEntryName()
         {
-            return new object[] { Name, new object[] { string.Format("*:{0}:{1}", Port, HostHeader) }, HomeDirectory };
+            if (string.IsNullOrEmpty(IpAddress))
+                IpAddress = "*";
+
+            return new object[] { Name, new object[] { string.Format("{0}:{1}:{2}", IpAddress, Port, HostHeader) }, HomeDirectory };
         }
     }
 }
