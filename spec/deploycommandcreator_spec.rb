@@ -7,8 +7,9 @@ describe "DeployCommandCreator"  do
     configured_as :mvc
   env :systest do
     host \"Test\"
-    to \"server\", \"path\"
-    to \"server2\", \"path2\"
+    to \"server\", \"path\", \"*\"
+    to \"server2\", \"path2\", \"*\"
+    to \"server2\", \"path2\", \"127.0.0.1\"
   end
 end")
     require 'deploymentconfig'
@@ -46,6 +47,14 @@ end")
     @mvc.to[1].server.should == "server2"
     @mvc.to[1].path.should == "path2"
   end      
+  
+  it "should have a default IP address of *" do
+    @mvc.to[0].ipaddress.should == "*"
+  end
+  
+  it "should have the correct IP address if it has been defined" do
+    @mvc.to[2].ipaddress.should == "127.0.0.1"
+  end
 end
 
 describe "DeployCommandCreator", "overriding default" do

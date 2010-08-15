@@ -55,9 +55,10 @@ class MvcDeployment
       location = DeployTo.new
       location.server = locations[i]
       location.path = locations[i + 1]
+      location.ipaddress = locations[i + 2]
 
       self.to << location
-      i = i + 2
+      i = i + 3
     end      
   end
     
@@ -69,12 +70,12 @@ class MvcDeployment
     self.after = block
   end
   
-  def extra_header(header) #Header will contain array of all the headers being added
+  def extra_header(server, header) #Header will contain array of all the headers being added
     iis = IIS.server
-    iis.set_extra_header(header, self)
+    iis.set_extra_header(server, header, self)
   end
   
-  def virtual_directory(vDirInfo) #Directories will contain array of all the virtual directories being added    
+  def virtual_directory(server, vDirInfo) #Directories will contain array of all the virtual directories being added    
     iis = IIS.server
     
     i = 0
@@ -87,11 +88,11 @@ class MvcDeployment
     end      
   end  
   
-  def cmd(command)
+  def cmd(server, command)
     `#{command}`
   end
   
-  def iis(command)
+  def iis(server, command)
     iis = IIS.server
     
     i = 0
@@ -105,13 +106,17 @@ class MvcDeployment
 
   end
   
+  def get_deploy_to_location(server)
+    self.to.select{|t| t.server == server}
+  end
+  
   def get_location(server)
-    servers = self.to.select{|t| t.server == server}
+    servers = get_deploy_to_location(server)
     servers[0].path
   end
     
   def deploy(server)  
-    execute_before_methods()
+    execute_before_methods(server)
         
     location = get_location(server)
     
@@ -122,30 +127,34 @@ class MvcDeployment
     
     iis = IIS.new
     iis.deploy(server, latest_version_location, self)
-    #  Execute post deployment steps
-    #     Configure ISAPI etc
     
-    execute_after_methods()    
+    execute_after_methods(server)    
   end
    
-  def execute_before_methods
+  def execute_before_methods(server)
     unless self.before.nil?
       self.before.each do |k, v|
-        call_method(k, v)
+        call_method(k, server, v)
       end
     end
   end
   
-  def execute_after_methods  
+  def execute_after_methods(server)
     unless self.after.nil?
       self.after.each do |k, v|
-        call_method(k, v)
+        call_method(k, server, v)
       end
     end
   end
   
-  def call_method(method_name, param)
-    self.send(method_name, param) if self.respond_to?(method_name)
+  def call_method(method_name, server, param)  
+    if self.respond_to?(method_name)
+      if self.method(method_name).arity == 2
+        self.send(method_name, server, param) 
+      else
+        self.send(method_name, param) 
+      end
+    end
   end
   
 end
@@ -153,4 +162,5 @@ end
 class DeployTo
   attr_accessor :server
   attr_accessor :path  
+  attr_accessor :ipaddress
 end

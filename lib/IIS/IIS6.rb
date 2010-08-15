@@ -33,7 +33,7 @@ class IIS6
     return app_pool.exists
   end
   
-  def set_extra_header(header, deployment)
+  def set_extra_header(server, header, deployment)
     site = get_website('localhost', deployment)
     
     header.each do |h|
@@ -42,7 +42,9 @@ class IIS6
       
       existing_headers.each {|e| header_arg << "\"#{e}\" "}
       
-      cmd = "cscript /nologo external\\adsutil.vbs set w3svc/#{site.name}/ServerBindings \"#{h}\" #{header_arg}"      
+      ip = deployment.get_deploy_to_location(server)[0].ipaddress
+      
+      cmd = "cscript /nologo external\\adsutil.vbs set w3svc/#{site.name}/ServerBindings \"#{ip}:#{h}\" #{header_arg}"      
       `#{cmd}`
     end
   end
@@ -104,12 +106,18 @@ class IIS6
     website.app_pool = get_app_pool_name(deployment.site_name)
     website.home_directory = convert_path_to_iis_format(location)
     website.port = deployment.port
-    website.IpAddress = deployment.ipaddress
+    website.IpAddress =  deployment.get_deploy_to_location(server)[0].ipaddress
     website.host_header = deployment.host
     website.server = server
         
     website.create
     website.start
+    
+    #set_isapi_filter(deployment) 
+  end
+  
+  def set_isapi_filter(deployment)
+    execute_admin(:set, "ScriptMaps \"*,C:\\windows\\Microsoft.NET\\Framework\\v2.0.50727\\aspnet_isapi.dll,1\"", deployment)
   end
     
   def get_app_pool_name(name)
