@@ -1,6 +1,6 @@
 $: << 'lib'
 require 'dolphindeploy_rake'
-   
+
 namespace :specs do
   require 'spec/rake/spectask'
 
@@ -10,7 +10,6 @@ namespace :specs do
   Spec::Rake::SpecTask.new :all do |t|
     t.spec_files = FileList['spec/**/*_spec.rb']
   end
-  
 end
 
 namespace :example do
