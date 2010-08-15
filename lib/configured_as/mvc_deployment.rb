@@ -87,6 +87,24 @@ class MvcDeployment
     end      
   end  
   
+  def cmd(command)
+    `#{command}`
+  end
+  
+  def iis(command)
+    iis = IIS.server
+    
+    i = 0
+    while i < command.length
+      type = command[i]
+      cmd = command[i + 1]
+
+      iis.execute_admin(type, cmd, self)
+      i = i + 2
+    end      
+
+  end
+  
   def get_location(server)
     servers = self.to.select{|t| t.server == server}
     servers[0].path

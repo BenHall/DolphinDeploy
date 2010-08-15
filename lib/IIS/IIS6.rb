@@ -57,6 +57,12 @@ class IIS6
     cmd = "cscript /nologo external\\adsutil.vbs  SET w3svc/#{site.name}/root/#{name}/path #{convert_path_to_iis_format(full_path)}"    
     `#{cmd}`
   end
+  
+  def execute_admin(type, cmd, deployment)
+    site = get_website('localhost', deployment)
+    cmd = "cscript /nologo external\\adsutil.vbs #{type.to_s} w3svc/#{site.name}/#{cmd}"      
+    `#{cmd}`
+  end
     
   private
   
