@@ -42,12 +42,20 @@ class IIS6
       
       existing_headers.each {|e| header_arg << "\"#{e}\" "}
       
-      cmd = "cscript /nologo external\\adsutil.vbs set w3svc/#{site.name}/ServerBindings \"#{h}\" #{header_arg}"
-      puts "About to execute: " + cmd
+      cmd = "cscript /nologo external\\adsutil.vbs set w3svc/#{site.name}/ServerBindings \"#{h}\" #{header_arg}"      
       `#{cmd}`
     end
   end
   
+  def create_virtual_directory(name, path, deployment)
+    site = get_website('localhost', deployment)
+    cmd = "cscript /nologo external\\adsutil.vbs CREATE w3svc/#{site.name}/root/#{name} \"IIsWebVirtualDir\""    
+    `#{cmd}`
+    
+    cmd = "cscript /nologo external\\adsutil.vbs  SET w3svc/#{site.name}/root/#{name}/path #{path}"    
+    `#{cmd}`
+  end
+    
   private
   
   def get_existing_headers(site)

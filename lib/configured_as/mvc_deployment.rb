@@ -70,9 +70,22 @@ class MvcDeployment
   end
   
   def extra_header(header) #Header will contain array of all the headers being added
-    iis = IIS.new
+    iis = IIS.server
     iis.set_extra_header(header, self)
   end
+  
+  def virtual_directory(vDirInfo) #Directories will contain array of all the virtual directories being added    
+    iis = IIS.server
+    
+    i = 0
+    while i < vDirInfo.length
+      name = vDirInfo[i]
+      path = vDirInfo[i + 1]
+
+      iis.create_virtual_directory(name, path, self)
+      i = i + 2
+    end      
+  end  
   
   def get_location(server)
     servers = self.to.select{|t| t.server == server}
