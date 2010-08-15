@@ -11,11 +11,10 @@ describe IIS6, "executing against adsutil" do
       
       mvc = MvcDeployment.new
       mvc.site_name = 'test'
-      mvc.port = 80
       
       IIS6.any_instance.expects(:`).with("cscript external\\adsutil.vbs set w3svc/5/ServerBindings \":80:test.host.header\"").once
       iis = IIS6.new
-      iis.set_extra_header 'test.host.header', mvc
+      iis.set_extra_header ':80:test.host.header', mvc
     end
     
     it "should supports multiple additional headers being defined"

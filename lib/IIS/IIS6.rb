@@ -42,7 +42,7 @@ class IIS6
       
       existing_headers.each {|e| header_arg << "\"#{e}\" "}
       
-      cmd = "cscript /nologo external\\adsutil.vbs set w3svc/#{site.name}/ServerBindings \":#{deployment.port}:#{h}\" #{header_arg}"
+      cmd = "cscript /nologo external\\adsutil.vbs set w3svc/#{site.name}/ServerBindings \"#{h}\" #{header_arg}"
       puts "About to execute: " + cmd
       `#{cmd}`
     end
