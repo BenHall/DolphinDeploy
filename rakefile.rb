@@ -1,5 +1,5 @@
 $: << 'lib'
-require 'dolphindeploy'
+require 'dolphindeploy_rake'
    
 namespace :specs do
   require 'spec/rake/spectask'
@@ -18,8 +18,13 @@ namespace :example do
   task :run do
     deployment = Deployment.load()    
     creator = DeployCommandCreator.new()
-    mvc = creator.convert_from_config(deployment, :local)
-  
-    mvc.deploy 'localhost'    
+    
+    env = :local
+    server = 'localhost'
+    
+    mvc = creator.convert_from_config(deployment, env)
+    mvc.deploy server
   end
 end
+
+
