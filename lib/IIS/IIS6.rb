@@ -52,17 +52,15 @@ class IIS6
     cmd = "cscript /nologo external\\adsutil.vbs CREATE w3svc/#{site.name}/root/#{name} \"IIsWebVirtualDir\""    
     `#{cmd}`
     
-    cmd = "cscript /nologo external\\adsutil.vbs  SET w3svc/#{site.name}/root/#{name}/path #{path}"    
+    root_site = get_root_site(site)    
+    full_path = File.join(root_site.Properties['Path'][0], path)
+    cmd = "cscript /nologo external\\adsutil.vbs  SET w3svc/#{site.name}/root/#{name}/path #{convert_path_to_iis_format(full_path)}"    
     `#{cmd}`
   end
     
   private
   
   def get_existing_headers(site)
-#ServerBindings                  : (LIST)  (3 Items)
-#  ":80:local.testlocal2.test"
-#  ":80:test"
-#  ":80:test2"
     cmd = "cscript /nologo external\\adsutil.vbs get w3svc/#{site.name}/ServerBindings"
     result = `#{cmd}`
     headers = result.to_a[1..-1].join
@@ -71,17 +69,7 @@ class IIS6
     
     return headers
   end
-  
-  def clean_output(output)
-    result = []
     
-    output.each do |o|
-      result << o.strip.gsub("\n", "")
-    end
-    
-    return result
-  end
-  
   def create_app_pool(server, name)
     app_pool = AppPoolController.new
     app_pool.server = server  # Always executed on the local box
@@ -92,9 +80,8 @@ class IIS6
   def update_website_path(server, location, deployment)  
     site = get_website(server, deployment)    
     
-    path = "IIS://localhost/w3svc/#{site.name}/ROOT"
-    root_site = DirectoryEntry.new(path.to_clr_string)
-    root_site.Properties['Path'][0] = location.gsub('/','\\').to_clr_string
+    root_site = get_root_site(site)    
+    root_site.Properties['Path'][0] = convert_path_to_iis_format(location)
     root_site.commit_changes()
   end
   
@@ -109,7 +96,7 @@ class IIS6
     website = WebsiteController.new
     website.name = deployment.site_name
     website.app_pool = get_app_pool_name(deployment.site_name)
-    website.home_directory = location.gsub('/','\\'); 
+    website.home_directory = convert_path_to_iis_format(location)
     website.port = deployment.port
     website.IpAddress = deployment.ipaddress
     website.host_header = deployment.host
@@ -121,5 +108,24 @@ class IIS6
     
   def get_app_pool_name(name)
     "#{name}_AppPool"
+  end
+  
+  def convert_path_to_iis_format(path)
+    path.gsub('/','\\').to_clr_string
+  end
+  
+  def get_root_site(site)
+    path = "IIS://localhost/w3svc/#{site.name}/ROOT"
+    DirectoryEntry.new(path.to_clr_string)
+  end
+  
+  def clean_output(output)
+    result = []
+    
+    output.each do |o|
+      result << o.strip.gsub("\n", "")
+    end
+    
+    return result
   end
 end
