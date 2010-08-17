@@ -58,6 +58,26 @@ class IIS6
     full_path = File.join(root_site.Properties['Path'][0], path)
     cmd = "cscript /nologo external\\adsutil.vbs  SET w3svc/#{site.name}/root/#{name}/path #{convert_path_to_iis_format(full_path)}"    
     `#{cmd}`
+
+		cmd = "cscript /nologo external\\adsutil.vbs  SET w3svc/#{site.name}/root/#{name}/AppFriendlyName #{name}"    
+    `#{cmd}`
+
+		
+		cmd = "cscript /nologo external\\adsutil.vbs  SET w3svc/#{site.name}/root/#{name}/AppRoot /LM/W3SVC/#{site.name}/root/#{name}"    
+    `#{cmd}`
+		
+		cmd = "cscript /nologo external\\adsutil.vbs  SET w3svc/#{site.name}/root/#{name}/AppIsolated 2"    
+    `#{cmd}`
+		
+		cmd = "cscript /nologo external\\adsutil.vbs  SET w3svc/#{site.name}/root/#{name}/DirBrowseFlags 1073741886"    
+    `#{cmd}`
+		
+		cmd = "cscript /nologo external\\adsutil.vbs  SET w3svc/#{site.name}/root/#{name}/AccessFlags 513"    
+    `#{cmd}`
+#		root_site.Properties['AppRoot'][0] = "LM/W3SVC/#{site.name}/root/#{name}"
+#		root_site.Properties['AppIsolated'][0] = 2
+#		root_site.Properties['DirBrowseFlags'][0] = 1073741886
+#		root_site.Properties['AccessFlags'][0] = 513
   end
   
   def execute_admin(type, cmd, deployment)
@@ -113,7 +133,7 @@ class IIS6
     website.create
     website.start
     
-    #set_isapi_filter(deployment) 
+    set_isapi_filter(deployment) 
   end
   
   def set_isapi_filter(deployment)
