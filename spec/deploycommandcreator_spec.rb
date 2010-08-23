@@ -1,17 +1,19 @@
 require File.join(File.dirname(__FILE__), 'support', 'spec_helper')
 require 'DeployCommandCreator'
 
-describe "DeployCommandCreator"  do
+describe DeployCommandCreator do
   def config()
-    File.stubs(:read).returns("environment do 
-    configured_as :mvc
-  env :systest do
-    host \"Test\"
-    to \"server\", \"path\", \"*\"
-    to \"server2\", \"path2\", \"*\"
-    to \"server2\", \"path2\", \"127.0.0.1\"
-  end
-end")
+    config_file = 
+      "environment do 
+        configured_as :mvc
+        env :systest do
+          host \"Test\"
+          to \"server\", \"path\", \"*\"
+          to \"server2\", \"path2\", \"*\"
+          to \"server2\", \"path2\", \"127.0.0.1\"
+        end
+      end"
+    File.stubs(:read).returns(config_file)
     require 'deploymentconfig'
     
     return Deployment.load()
@@ -57,15 +59,17 @@ end")
   end
 end
 
-describe "DeployCommandCreator", "overriding default" do
+describe DeployCommandCreator, "overriding default" do
   def config()
-    File.stubs(:read).returns("environment do 
-    configured_as :mvc
-    desc \"Testing\"
-  env :systest do
-    host \"Test\"
-  end
-end")
+    config_file = 
+      "environment do 
+         configured_as :mvc
+         desc \"Testing\"
+         env :systest do
+           host \"Test\"
+         end
+       end"
+    File.stubs(:read).returns(config_file)
     require 'deploymentconfig'
     
     return Deployment.load()
@@ -81,26 +85,27 @@ end")
   end
 end
 
-describe "DeployCommandCreator with Before and After blocks"  do
+describe DeployCommandCreator, "Before and After blocks"  do
   def config()
-    File.stubs(:read).returns("environment do 
-    configured_as :mvc
-  env :systest do
-    host \"Test\"
-    to \"server\", \"path\"
-    to \"server2\", \"path2\"
+    config_file = 
+      "environment do 
+         configured_as :mvc
+         env :systest do
+           host \"Test\"
+           to \"server\", \"path\"
+           to \"server2\", \"path2\"
     
-    before do
-      set_value 'xyz'
-      set_host 'ABC' #Redefines the value before executing... 
-    end
-    
-    after do
-      set_exec_something 'abc'
-      set_port 99 #Redefines the value after executing... 
-    end
-  end
-end")
+           before do
+             set_value 'xyz'
+             set_host 'ABC' #Redefines the value before executing... 
+           end
+           after do
+             set_exec_something 'abc'
+             set_port 99 #Redefines the value after executing... 
+           end
+         end
+      end"
+    File.stubs(:read).returns(config_file)
     require 'deploymentconfig'
     
     return Deployment.load()
@@ -121,7 +126,7 @@ end")
   end  
   
   it "should have a before keys collection containing the method names" do
-    @mvc.before.keys.should include :set_value
+    @mvc.before.keys.should include(:set_value)
   end
   
   it "should have a list of before blocks to execute" do
@@ -129,7 +134,7 @@ end")
   end
     
   it "should have an after keys collection containing the method names" do
-    @mvc.after.keys.should include :set_exec_something
+    @mvc.after.keys.should include(:set_exec_something)
   end
   
   it "should support multiple calls being specified" do
@@ -139,13 +144,15 @@ end
 
 describe "DeployCommandCreator", "supports multiple arguments for method" do
   def config()
-    File.stubs(:read).returns("environment do 
-    configured_as :mvc
-    desc \"Testing\"
-  env :systest do
-    host \"Test\"
-  end
-end")
+    config_file = 
+      "environment do 
+         configured_as :mvc
+         desc \"Testing\"
+         env :systest do
+           host \"Test\"
+         end
+       end"
+    File.stubs(:read).returns(config_file)
     require 'deploymentconfig'
     
     return Deployment.load()
