@@ -27,12 +27,18 @@ class IIS7
     return app.length > 0
   end
   
-  def set_extra_header(server, header, deployment)#NOT DONE
-    puts "set_extra_header"
+  def set_extra_header(server, header, deployment)
     iis = ServerManager.new  
     sites = iis.sites.select {|s| s.name == deployment.site_name }
     
-    #add_binding(sites[0], ip_address, deployment.port, deployment.host)
+    header.each do |h|
+      ip = deployment.get_deploy_to_location(server)[0].ipaddress
+      
+      header_broken_down = h.split(":")
+      port = header_broken_down[0]
+      host = header_broken_down[1]
+      add_binding(sites[0], ip, port, host)
+    end
     
     iis.commit_changes
   end
