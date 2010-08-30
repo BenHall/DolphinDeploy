@@ -28,6 +28,7 @@ class IIS7
   end
   
   def set_extra_header(server, header, deployment)#NOT DONE
+    puts "set_extra_header" + header
     site = get_website(server, deployment)
     
     add_binding(site[0], ip_address, deployment.port, deployment.host)
@@ -36,16 +37,18 @@ class IIS7
   end
   
   def create_virtual_directory(name, path, deployment)#NOT DONE
-    sites = get_website("localhost", deployment)    
-    site = site[0]
+    puts "create_virtual_directory" + name
+    iis = ServerManager.new  
+    sites = iis.sites.select {|s| s.name == deployment.site_name }
+    site = sites[0]
     app = site.applications[0]
     
     vdir = app.VirtualDirectories.CreateElement();
-    vdir.Path = name;
+    vdir.Path = "/" + name;
     vdir.PhysicalPath = path;
     app.VirtualDirectories.Add(vdir);
     site.Applications.Add(app);
-    #    iis.commit_changes
+    iis.commit_changes
   end
   
   def execute_admin(type, cmd, deployment)
@@ -63,11 +66,14 @@ class IIS7
   end
   
   def update_website_path(server, location, deployment)   #NOT DONE
-    sites = get_website(server, deployment)    
-    site = site[0]
+    puts "update_website_path"
+    iis = ServerManager.new  
+    sites = iis.sites.select {|s| s.name == deployment.site_name }
+    site = sites[0]
     app = site.applications[0]
     
-    app.Path = convert_path_to_iis_format(location)
+    vdir = app.VirtualDirectories.select {|v| v.Path = "/"}
+    vdir[0].PhysicalPath = convert_path_to_iis_format(location)
     iis.commit_changes
   end
   
