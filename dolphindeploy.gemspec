@@ -5,11 +5,12 @@
 
 Gem::Specification.new do |s|
   s.name = %q{dolphindeploy}
-  s.version = "0.0.1"
+  s.version = "0.0.2"
+  s.platform = Gem::Platform.new(["universal", "dotnet", nil])
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Ben Hall"]
-  s.date = %q{2010-08-15}
+  s.date = %q{2010-08-30}
   s.description = %q{Dolphin Deploy - Automated deployment for ASP.net websites.}
   s.email = %q{ben@benhall.me.uk}
   s.extra_rdoc_files = [
@@ -101,8 +102,8 @@ Gem::Specification.new do |s|
   s.summary = %q{Dolphin Deploy - Automated deployment for ASP.net websites}
   s.test_files = [
     "spec/configured_as/mvc_deployment_spec.rb",
-     "spec/config_spec.rb",
      "spec/deploycommandcreator_spec.rb",
+     "spec/deploymentconfig_spec.rb",
      "spec/dolphindeploy_spec.rb",
      "spec/file_manager_spec.rb",
      "spec/IIS/IIS6_spec.rb",
@@ -115,9 +116,21 @@ Gem::Specification.new do |s|
     s.specification_version = 3
 
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
+      s.add_runtime_dependency(%q<caesars>, [">= 0.7.4"])
+      s.add_development_dependency(%q<rspec>, [">= 1.2.8"])
+      s.add_development_dependency(%q<jeweler>, [">= 1.4.0"])
+      s.add_development_dependency(%q<mocha>, [">= 0.9.8"])
     else
+      s.add_dependency(%q<caesars>, [">= 0.7.4"])
+      s.add_dependency(%q<rspec>, [">= 1.2.8"])
+      s.add_dependency(%q<jeweler>, [">= 1.4.0"])
+      s.add_dependency(%q<mocha>, [">= 0.9.8"])
     end
   else
+    s.add_dependency(%q<caesars>, [">= 0.7.4"])
+    s.add_dependency(%q<rspec>, [">= 1.2.8"])
+    s.add_dependency(%q<jeweler>, [">= 1.4.0"])
+    s.add_dependency(%q<mocha>, [">= 0.9.8"])
   end
 end
 

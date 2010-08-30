@@ -9,6 +9,16 @@ namespace :jeweler do
     gemspec.homepage = "http://github.com/BenHall/dolphindeploy"
     gemspec.authors = ["Ben Hall"]
     gemspec.files =  FileList["README*", "{external,lib}/**/*"]
+    gemspec.has_rdoc = false  
+    gemspec.platform = Gem::Platform.new(["universal", "dotnet"])
+    # IronRuby Platform
+    
+    gemspec.add_dependency('caesars', '>= 0.7.4')
+
+    gemspec.add_development_dependency('rspec', '>= 1.2.8')
+    gemspec.add_development_dependency('jeweler', '>= 1.4.0')
+    gemspec.add_development_dependency('mocha', '>= 0.9.8')
+    
   end
 
   Jeweler::GemcutterTasks.new
