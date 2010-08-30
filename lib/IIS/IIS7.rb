@@ -62,7 +62,9 @@ class IIS7
   end
   
   def execute_admin(type, cmd, deployment)
-    site = get_website('localhost', deployment)
+    iis = ServerManager.new  
+    sites = iis.sites.select {|s| s.name == deployment.site_name }
+    site = sites[0]    
     cmd = "cscript /nologo external\\adsutil.vbs #{type.to_s} w3svc/#{site.name}/#{cmd}"      
     `#{cmd}`
   end
