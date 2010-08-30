@@ -34,7 +34,7 @@ class IIS6
   end
   
   def set_extra_header(server, header, deployment)
-    site = get_website('localhost', deployment)
+    site = get_website(server, deployment)
     
     header.each do |h|
       existing_headers = get_existing_headers(site)
