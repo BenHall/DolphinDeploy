@@ -28,28 +28,29 @@ class IIS7
   end
   
   def set_extra_header(server, header, deployment)#NOT DONE
-    puts "set_extra_header" + header
-    site = get_website(server, deployment)
+    puts "set_extra_header"
+    iis = ServerManager.new  
+    sites = iis.sites.select {|s| s.name == deployment.site_name }
     
-    add_binding(site[0], ip_address, deployment.port, deployment.host)
+    #add_binding(sites[0], ip_address, deployment.port, deployment.host)
     
-    #    iis.commit_changes
+    iis.commit_changes
   end
   
-  def create_virtual_directory(name, path, deployment)#NOT DONE
-    puts "create_virtual_directory" + name
+  def create_virtual_directory(name, path, deployment)  
     iis = ServerManager.new  
     sites = iis.sites.select {|s| s.name == deployment.site_name }
     site = sites[0]
     app = site.applications[0]
     
-    vdir = app.VirtualDirectories.select {|v| v.Path == "/" + name}
-    unless vdir.empty?
-      vdir = app.VirtualDirectories.CreateElement();
-      vdir.Path = "/" + name;
-      vdir.PhysicalPath = path;
-      app.VirtualDirectories.Add(vdir);
-      site.Applications.Add(app);
+    root = app.virtual_directories.select {|v| v.path == "/" }
+    vdir_requested_to_create = app.virtual_directories.select {|v| v.path == "/" + name}
+  
+    if vdir_requested_to_create.empty?
+      vdir = app.virtual_directories.create_element()
+      vdir.path = "/" + name
+      vdir.physical_path = File.join(root[0].physical_path, path)
+      app.virtual_directories.add(vdir)
       iis.commit_changes
     end
   end
@@ -68,15 +69,14 @@ class IIS7
     iis.commit_changes
   end
   
-  def update_website_path(server, location, deployment)   #NOT DONE
-    puts "update_website_path"
+  def update_website_path(server, location, deployment)    
     iis = ServerManager.new  
     sites = iis.sites.select {|s| s.name == deployment.site_name }
     site = sites[0]
     app = site.applications[0]
     
-    vdir = app.VirtualDirectories.select {|v| v.Path == "/"}
-    vdir[0].PhysicalPath = convert_path_to_iis_format(location)
+    vdir = app.virtual_directories.select {|v| v.Path == "/"}
+    vdir[0].physical_path = convert_path_to_iis_format(location)
     iis.commit_changes
   end
   
@@ -92,8 +92,7 @@ class IIS7
   
   def create_website(server, location, deployment)
     name = deployment.site_name.to_clr_string
-    location = convert_path_to_iis_format(location)
-    puts location
+    location = convert_path_to_iis_format(location)    
     iis = ServerManager.new
 
     site = iis.sites.CreateElement();
@@ -101,20 +100,20 @@ class IIS7
     site.SetAttributeValue("name", name);
     
     app = site.Applications.CreateElement();
-    app.Path = "/".to_clr_string
+    app.path = "/".to_clr_string
     app.ApplicationPoolName = get_app_pool_name(deployment.site_name)
     
-    vdir = app.VirtualDirectories.CreateElement()
-    vdir.Path = "/"
-    vdir.PhysicalPath = location
-    app.VirtualDirectories.Add(vdir)
+    vdir = app.virtual_directories.CreateElement()
+    vdir.path = "/"
+    vdir.physical_path = location
+    app.virtual_directories.add(vdir)
     
-    site.Applications.Add(app);    
+    site.applications.add(app);    
         
     ip_address = deployment.get_deploy_to_location(server)[0].ipaddress
     add_binding(site, ip_address, deployment.port, deployment.host)
     
-    iis.sites.Add(site);
+    iis.sites.add(site);
     
     iis.commit_changes
   end
@@ -128,10 +127,10 @@ class IIS7
   end
   
   def add_binding(site, ip_address, port, host)
-    binding = site.Bindings.CreateElement();
+    binding = site.bindings.create_element();
     binding.SetAttributeValue("protocol", "http".to_clr_string);
     binding.SetAttributeValue("bindingInformation", "#{ip_address}:#{port}:#{host}".to_clr_string);
-    site.Bindings.Add(binding);
+    site.bindings.add(binding);
   end
   
   def get_app_pool_name(name)
