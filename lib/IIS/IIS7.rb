@@ -43,12 +43,15 @@ class IIS7
     site = sites[0]
     app = site.applications[0]
     
-    vdir = app.VirtualDirectories.CreateElement();
-    vdir.Path = "/" + name;
-    vdir.PhysicalPath = path;
-    app.VirtualDirectories.Add(vdir);
-    site.Applications.Add(app);
-    iis.commit_changes
+    vdir = app.VirtualDirectories.select {|v| v.Path == "/" + name}
+    unless vdir.empty?
+      vdir = app.VirtualDirectories.CreateElement();
+      vdir.Path = "/" + name;
+      vdir.PhysicalPath = path;
+      app.VirtualDirectories.Add(vdir);
+      site.Applications.Add(app);
+      iis.commit_changes
+    end
   end
   
   def execute_admin(type, cmd, deployment)
@@ -72,7 +75,7 @@ class IIS7
     site = sites[0]
     app = site.applications[0]
     
-    vdir = app.VirtualDirectories.select {|v| v.Path = "/"}
+    vdir = app.VirtualDirectories.select {|v| v.Path == "/"}
     vdir[0].PhysicalPath = convert_path_to_iis_format(location)
     iis.commit_changes
   end
