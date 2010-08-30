@@ -6,9 +6,8 @@ class IIS
       require 'IIS6'
       version = IIS6.new
     else
-      # Temp
-      require 'IIS6'
-      version = IIS6.new
+      require 'IIS7'
+      version = IIS7.new
     end
     
     return version
