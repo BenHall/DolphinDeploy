@@ -9,7 +9,7 @@ end
 
 class Deployment
   def self.load
-    conf = File.join(File.dirname(__FILE__), '..\deploy.conf')
+    conf = "deploy.conf"
     @deployment = DeploymentConfig.new(conf)
   end
 end
