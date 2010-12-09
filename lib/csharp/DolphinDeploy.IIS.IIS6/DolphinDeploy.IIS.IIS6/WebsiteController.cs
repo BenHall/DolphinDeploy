@@ -92,10 +92,12 @@ namespace DolphinDeploy.IIS.IIS6
 
         private object[] GetIISSiteEntryName()
         {
-            if (string.IsNullOrEmpty(IpAddress))
-                IpAddress = "*";
-
-            return new object[] { Name, new object[] { string.Format("{0}:{1}:{2}", IpAddress, Port, HostHeader) }, HomeDirectory };
+            return new object[]
+            {
+            	Name, 
+				new object[] { string.Format("{0}:{1}:{2}", IpAddress, Port, HostHeader) }, 
+				HomeDirectory
+            };
         }
     }
 }
